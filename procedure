@@ -1,0 +1,401 @@
+------2-------
+cd sec_exp
+git init
+git branch
+git branch feature-branch
+git checkout feature-branch
+git status
+git add .
+git commit -m "Added new feature in feature branch"
+git checkout main
+git status
+git add .
+git commit -m "Updated file in main branch"
+git merge feature-branch
+git add .
+git commit
+git log --oneline
+git branch -d feature-branch
+------3--------
+git config --global user.name "Your Name"
+git config --global user.email "your_email@example.com"
+git config --global --list
+cd Desktop
+git clone https://github.com/YourUsername/git-lab-demo.git
+cd git-lab-demo
+git init
+git remote add origin https://github.com/YourUsername/git-lab-demo.git
+git pull origin main
+touch main.py
+git add main.py
+git commit -m "Add main.py file"
+git push -u origin main
+git fetch origin
+git log origin/main
+git merge origin/main
+git pull origin main
+------4-------
+git clone <repository-url>
+cd Git_PullRequests
+touch file1.txt
+echo "This file is created in master branch" > file1.txt
+git status
+git add file1.txt
+git commit -m "Initial commit in master"
+git push origin main
+git pull origin main
+git branch feature-1
+git checkout feature-1
+echo "This change is from feature-1 branch" >> file1.txt
+touch feature.txt
+echo "Feature branch file" > feature.txt
+git status
+git add .
+git commit -m "Changes done in feature-1"
+git push origin feature-1
+git checkout master
+git pull origin master
+git log --oneline
+git branch -d feature-1
+git push origin --delete feature-1
+-------5-------
+git pull origin main
+git tag v1.0
+git tag
+git tag -a v1.2 -m "v1.2 Created"
+git tag
+git show v1.0
+git tag -l "v1.*"
+git push origin v1.0
+git tag v2.0
+git push --tags
+git tag -d v1.0
+git push origin -d v1.0
+______________________________________________________
+11. Writing Unit Tests using Junit
+Open eclipse
+Create java project
+Calculator.java 
+Create Junit 
+CalculatorTest.java – here run right click run as junit
+12 . Running Junit tests with maven
+Create folder 
+mvn archetype:generate (2309,9)
+GroupID=com.bnmit
+Artifact Id=sample-app
+Package = com.bnmit
+Y
+Open folder src/main/java/com/bnmit : rename file as BankService.java and paste code
+Open folder src/test/java/com/bnmit : rename file as BankServiceTest.java and paste code 
+In pom.xml add dependency 
+<dependencies>
+    <dependency>
+        <groupId>org.junit.jupiter</groupId>
+        <artifactId>junit-jupiter-api</artifactId>
+        <scope>test</scope>
+    </dependency>
+    <!-- ✅ ADD THIS LINE -->
+    <dependency>
+        <groupId>org.junit.jupiter</groupId>
+        <artifactId>junit-jupiter-engine</artifactId>
+        <scope>test</scope>
+    </dependency>
+    <dependency>
+        <groupId>org.junit.jupiter</groupId>
+        <artifactId>junit-jupiter-params</artifactId>
+        <scope>test</scope>
+    </dependency>
+</dependencies>
+Now open sample-app : cmd 
+>> mvn compile        >>mvn test        >>mvn package    >>mvn clean    >>mvn site 
+13. Integrating Junit with Jenkins
+Do till experiment 2 
+Create repository add the files of experiment 12 leaving mvn 
+Commit changes
+Open Jenkins
+Description , Select maven project , scm:- git
+Paste url , */main , triggers :- Poll scm = * * * * *
+Build: goal and option :-package
+Post steps : Run only if success 
+Save and build now 
+In post build-action Select files to archieve :- target/*.jar
+Save and build 
+14. Test Coverage Using Jenkins
+Do the steps till 12 experiment
+Inside pom.xml add plugins part
+<plugin>
+    <groupId>org.jacoco</groupId>
+    <artifactId>jacoco-maven-plugin</artifactId>
+    <version>0.8.11</version>
+    <executions>
+        <!-- Attach JaCoCo agent -->
+        <execution>
+            <goals>
+                <goal>prepare-agent</goal>
+            </goals>
+        </execution>
+        <!-- Generate report -->
+        <execution>
+            <id>report</id>
+            <phase>test</phase>
+            <goals>
+                <goal>report</goal>
+            </goals>
+        </execution>
+    </executions>
+</plugin>
+Cmd sample-app 
+>> mvn clean test
+Open src/target/site/jacoco/index.html
+15 . Introduction to Docker commands
+>>docker –version
+>>docker ps 
+>>docker ps -a 
+>>docker images
+>>docker run hello-world
+>>docker pull nginx
+>>docker run -d -p 8080:80 nginx
+Open localhost:8080
+>>docker ps
+>>docker stop <container_id>
+>> docker rm <container_id>
+16. Creating Docker Image using Dockerfile
+Create a folder 
+Create a file : 
+sample.java 
+public class Sample {
+    public static void show() {
+        System.out.println("Hello from Sample class!");
+    }
+}
+ app.java
+import com.sun.net.httpserver.HttpServer;
+import com.sun.net.httpserver.HttpHandler;
+import com.sun.net.httpserver.HttpExchange;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.net.InetSocketAddress;
+public class App {
+    public static void main(String[] args) throws Exception {
+        HttpServer server = HttpServer.create(new InetSocketAddress(5000), 0);
+        server.createContext("/", new MyHandler());
+        server.setExecutor(null);
+        System.out.println("Server started at http://localhost:5000");
+        server.start();
+    }
+    static class MyHandler implements HttpHandler {
+        public void handle(HttpExchange t) throws IOException {
+            String response = "Hello from App + Sample!";
+            Sample.show();
+            t.sendResponseHeaders(200, response.length());
+            OutputStream os = t.getResponseBody();
+            os.write(response.getBytes());
+            os.close();
+        }
+    }
+}
+Dockerfile :
+FROM eclipse-temurin:21-jdk
+WORKDIR /app
+COPY App.java /app
+COPY Sample.java /app
+RUN javac App.java Sample.java
+EXPOSE 5000
+CMD ["java", "App"]
+Open cmd :- 
+>>docker build -t java-web-app .
+>>docker run -p 5000:5000 java-web-app
+Open localhost:5000
+17. Docker Volumes and Port Mapping
+Create folder
+>>docker run -d nginx
+>>docker images
+>>docker run -d -p 8081:80 nginx
+Open localhost:8081
+>>docker volume create myvolume
+>>docker volume create dvolume 
+>>docker volume ls
+>>docker run -it -v myvolume:/data ubuntu bash
+#cd data
+Echo “ Docker Volumen Persistent Test” >test.txt
+exit
+>> docker run -it -v myvolume:/data ubuntu bash
+# cat/data/test.txt
+exit
+>>docker run -d -p 8086:80 -v myvolume:/usr/share/nginx/html nginx
+>>docker run -it -v myvolume:/usr/share/nginx/html ubuntu bash
+#echo “<h1> Persistent Web Page </h1>” > /usr/share/nginx/html/index.html
+Open localhost:8086
+18. Docker Image Push to Docker hub
+Open docker hub login with google 
+Create folder:- Create files of
+ Grade.java :-
+import java.util.*;
+public class Grade{
+  static char gradeFunction(double avg) {
+    if (avg >= 90) return 'A';
+    else if (avg >= 80) return 'B';
+    else if (avg >= 70) return 'C';
+    else if (avg >= 60) return 'D';
+    else return 'F';
+  }
+  public static void main(String[] args) {
+    Scanner scanner = new Scanner(System.in);
+    System.out.print("How many grades (1 to 5)? ");
+    int count = scanner.nextInt();
+    if (count < 1 || count > 5) {
+      System.out.println("Invalid number. You must enter between 1 and 5 grades.");
+      scanner.close();
+      return; 
+    }
+    double sum = 0.0;
+    for (int i = 1; i <= count; i++) {
+      System.out.print("Enter grade " + i + ": ");
+      double grade = scanner.nextDouble();
+      sum += grade;
+    }
+    double avg = sum / count;
+    System.out.println("Average: " + avg);
+    System.out.println("Letter grade: " + gradeFunction(avg));
+    scanner.close();
+  }
+}
+Dockerfile:-
+FROM eclipse-temurin:17-jdk
+WORKDIR /app
+COPY . /app
+RUN javac Grade.java
+CMD ["java", "Grade"]
+Open cmd
+>>docker ps
+>>docker build -t java-app .
+>>docker run -d -t java-app
+>>docker ps
+>>docker login (Press Enter and give confirm)
+>>docker login (Note Username)
+>>docker tag java-app 12335678/java-app:v1
+>>docker push 12335678/java-app:v1
+Open repository in dockerHub
+19. Jenkins and Docker Integration
+Create Repository
+Add Grade.java and Dockerfile 
+Open Jenkins : Freestyle
+SCM :- git url , main 
+Scm polling :- * * * * *
+Docker build -t java-app .
+Docker run -d -t java-app
+
+_________________________________________________________________________
+pipeline {
+    agent any
+
+    tools {
+        maven 'Maven'   // Make sure Maven is configured in Jenkins
+        jdk 'JDK21'     // Configure JDK in Jenkins (Manage Jenkins → Tools)
+    }
+
+    stages {
+
+        stage('Checkout Code') {
+            steps {
+                git 'https://github.com/your-username/calculator-project.git'
+            }
+        }
+
+        stage('Compile') {
+            steps {
+                sh 'mvn clean compile'
+            }
+        }
+
+        stage('Test') {
+            steps {
+                sh 'mvn test'
+            }
+        }
+
+        stage('Code Coverage (JaCoCo)') {
+            steps {
+                sh 'mvn jacoco:report'
+            }
+        }
+
+        stage('Package') {
+            steps {
+                sh 'mvn package'
+            }
+        }
+    }
+
+    post {
+        success {
+            echo 'Build Successful ✅'
+        }
+        failure {
+            echo 'Build Failed ❌'
+        }
+    }
+}
+_______________________________________________________________________
+public class Calculator {
+
+    public int add(int a, int b) {
+        return a + b;
+    }
+
+    public int subtract(int a, int b) {
+        return a - b;
+    }
+
+    public int multiply(int a, int b) {
+        return a * b;
+    }
+
+    public int divide(int a, int b) {
+        if (b == 0) {
+            throw new ArithmeticException("Cannot divide by zero");
+        }
+        return a / b;
+    }
+}
+
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
+
+public class CalculatorTest {
+
+    Calculator calc = new Calculator();
+
+    @Test
+    void testAddition() {
+        assertEquals(5, calc.add(2, 3));
+        assertEquals(0, calc.add(-2, 2));
+    }
+
+    @Test
+    void testSubtraction() {
+        assertEquals(1, calc.subtract(3, 2));
+        assertEquals(-4, calc.subtract(2, 6));
+    }
+
+    @Test
+    void testMultiplication() {
+        assertEquals(6, calc.multiply(2, 3));
+        assertEquals(0, calc.multiply(5, 0));
+    }
+
+    @Test
+    void testDivision() {
+        assertEquals(2, calc.divide(4, 2));
+    }
+
+    @Test
+    void testDivisionByZero() {
+        Exception exception = assertThrows(ArithmeticException.class, () -> {
+            calc.divide(5, 0);
+        });
+
+        assertEquals("Cannot divide by zero", exception.getMessage());
+    }
+}
+___________________________-----------------------------
